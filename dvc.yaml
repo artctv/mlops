@@ -16,7 +16,26 @@ stages:
   text_to_numeric:
     cmd: python3 scripts/data_processing/change_text_to_numeric.py datasets/stage2/train.csv
     deps:
-      - datasets/stage2/train.csv
-      - scripts/data_processing/change_text_to_numeric.py
+    - datasets/stage2/train.csv
+    - scripts/data_processing/change_text_to_numeric.py
     outs:
-      - datasets/stage3
+    - datasets/stage3
+  split:
+    cmd: python3 scripts/data_processing/train_test_split.py datasets/stage3/train.csv
+    deps:
+    - datasets/stage3/train.csv
+    - scripts/data_processing/train_test_split.py
+    params:
+    - split.split_ratio
+    outs:
+    - datasets/stage4
+  train:
+    cmd: python3 scripts/model_learn/dt.py datasets/stage4/train.csv model.pkl
+    deps:
+    - datasets/stage4/train.csv
+    - scripts/model_learn/dt.py
+    params:
+    - train.max_depth
+    - train.seed
+    outs:
+    - models/model.pkl

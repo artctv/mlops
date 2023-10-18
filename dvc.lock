@@ -51,3 +51,43 @@ stages:
       md5: 23708a20f4c8a2c9fefb4423cdad74f6.dir
       size: 11420
       nfiles: 1
+  split:
+    cmd: python3 scripts/data_processing/train_test_split.py datasets/stage3/train.csv
+    deps:
+    - path: datasets/stage3/train.csv
+      hash: md5
+      md5: 8931ef9ca5f27fa6295d8a4db09935ae
+      size: 11420
+    - path: scripts/data_processing/train_test_split.py
+      hash: md5
+      md5: e0c99a0d25c243f973267aa33a8e7da6
+      size: 885
+    params:
+      params.yaml:
+        split.split_ratio: 0.3
+    outs:
+    - path: datasets/stage4
+      hash: md5
+      md5: 89e18a5286ee2a11b74a001395c6a10e.dir
+      size: 11409
+      nfiles: 2
+  train:
+    cmd: python3 scripts/model_learn/dt.py datasets/stage4/train.csv model.pkl
+    deps:
+    - path: datasets/stage4/train.csv
+      hash: md5
+      md5: 888c7b4cf3672739338d61180311db27
+      size: 7988
+    - path: scripts/model_learn/dt.py
+      hash: md5
+      md5: cf20ec096c4e22eee112089e67f35787
+      size: 650
+    params:
+      params.yaml:
+        train.max_depth: 5
+        train.seed: 42
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: 580c79e7cf1409402aa1bbba2a56a8b9
+      size: 142281
